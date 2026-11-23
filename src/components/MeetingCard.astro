@@ -1,0 +1,32 @@
+---
+import { meetingDate, meetingTime, type Meeting } from '../meetings';
+import { path } from '../lib/paths';
+
+const { meeting, linkToSchedule = false } = Astro.props as {
+  meeting?: Meeting;
+  linkToSchedule?: boolean;
+};
+---
+<div class="meeting-card">
+  <div class="meeting-icon" aria-hidden="true">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 10h18m-13 5h3m2 0h3"/></svg>
+  </div>
+  <div>
+    {meeting ? (
+      <>
+        <h3>{meeting.topic}</h3>
+        <p><time datetime={meeting.startsAt}>{meetingDate(meeting)} · {meetingTime(meeting)}</time></p>
+        <p>{meeting.description}</p>
+        {!linkToSchedule && (meeting.zoomUrl
+          ? <a class="button primary" href={meeting.zoomUrl}>{meeting.zoomLabel ?? 'Join on Zoom'}</a>
+          : <p>Zoom joining information will be posted when available.</p>)}
+      </>
+    ) : (
+      <>
+        <h3>Date to be announced</h3>
+        <p>We meet monthly on Zoom. Check here for the next confirmed topic, date, and joining details.</p>
+      </>
+    )}
+    {linkToSchedule && <a class="text-link" href={path('meetings/')}>View meeting details</a>}
+  </div>
+</div>

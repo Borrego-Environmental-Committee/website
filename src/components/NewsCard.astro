@@ -1,0 +1,20 @@
+---
+import type { Announcement } from '../lib/news';
+import { articlePath, dateLabel, path } from '../lib/paths';
+
+const { entry } = Astro.props as { entry: Announcement };
+const { data } = entry;
+---
+<article class="news-card">
+  <a class="card-photo" href={articlePath(entry.id)} tabindex="-1" aria-hidden="true">
+    <img src={path(data.image.path)} alt="" width="887" height="444" loading="lazy" decoding="async" />
+  </a>
+  <div class="card-copy">
+    <p class="eyebrow">
+      {data.category}{data.sample && <span> · Sample</span>}
+    </p>
+    <h3><a href={articlePath(entry.id)}>{data.title}</a></h3>
+    {data.published && <time class="muted" datetime={data.published}>{dateLabel(data.published)}</time>}
+    <p>{data.description}</p>
+  </div>
+</article>

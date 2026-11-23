@@ -1,0 +1,17 @@
+---
+import Base from '../../layouts/Base.astro';
+import NewsCard from '../../components/NewsCard.astro';
+import { publishedNews } from '../../lib/news';
+
+const news = await publishedNews();
+---
+<Base title="News & Announcements" description="Read desert conservation stories, field notes, and monthly meeting announcements.">
+  <section class="shell page-space">
+    <div class="page-heading">
+      <h1>News &amp; announcements</h1>
+      <p class="lead">Meeting notices, conservation stories, and observations from the desert.</p>
+    </div>
+    {news.length ? <div class="card-grid">{news.map((entry) => <NewsCard entry={entry} />)}</div>
+      : <p>Announcements will appear here when available.</p>}
+  </section>
+</Base>

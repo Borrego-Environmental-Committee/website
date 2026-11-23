@@ -1,0 +1,17 @@
+{
+  "name": "desert-conservation-circle",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22.23.4" },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "verify": "node scripts/verify-build.mjs",
+    "email:preview": "node scripts/build-email-preview.mjs"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "3.7.6",
+    "astro": "7.4.13"
+  }
+}

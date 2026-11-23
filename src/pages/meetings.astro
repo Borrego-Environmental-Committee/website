@@ -1,0 +1,49 @@
+---
+import Base from '../layouts/Base.astro';
+import MeetingCard from '../components/MeetingCard.astro';
+import { meetingDate, meetingTime, meetingSchedule, upcomingMeetings } from '../meetings';
+import { dateLabel, path } from '../lib/paths';
+
+const [next, ...later] = upcomingMeetings();
+const pastEvents = meetingSchedule.events
+  .filter((item) => Date.parse(item.startsAt) < Date.now())
+  .map(({ topic, startsAt }) => ({ topic, date: startsAt.slice(0, 10) }));
+const previous = [...pastEvents, ...meetingSchedule.previous]
+  .sort((a, b) => b.date.localeCompare(a.date));
+---
+<Base title="Monthly Meetings" description="See the next monthly Zoom meeting and browse upcoming and previous topics.">
+  <div class="shell page-space">
+    <div class="page-heading">
+      <p class="eyebrow">{meetingSchedule.frequency}</p>
+      <h1>Monthly meetings</h1>
+      <p class="lead">Come with a question, a field observation, or simply a curiosity about the desert.</p>
+    </div>
+    <div class="two-columns">
+      <section>
+        <h2>Next meeting</h2>
+        <MeetingCard meeting={next} />
+        <p><a class="text-link" href={path('contact/#newsletter')}>Get meeting announcements by email</a></p>
+      </section>
+      <div class="details-stack">
+        <section>
+          <h2>Upcoming schedule</h2>
+          {later.length ? <ul class="plain-list">{later.map((item) => (
+            <li>
+              <strong>{item.topic}</strong>
+              <time datetime={item.startsAt}>{meetingDate(item)} · {meetingTime(item)}</time>
+              <p>{item.description}</p>
+              {item.zoomUrl ? <a class="text-link" href={item.zoomUrl}>{item.zoomLabel ?? 'Join on Zoom'}</a>
+                : <p>Zoom details are forthcoming.</p>}
+            </li>
+          ))}</ul> : <p>Additional dates will appear here as they’re confirmed.</p>}
+        </section>
+        <section>
+          <h2>Previous topics</h2>
+          {previous.length ? <ul class="plain-list">{previous.map((item) => (
+            <li><strong>{item.topic}</strong><time datetime={item.date}>{dateLabel(item.date)}</time></li>
+          ))}</ul> : <p>Previous meeting topics will appear here when available.</p>}
+        </section>
+      </div>
+    </div>
+  </div>
+</Base>

@@ -1,0 +1,59 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import MeetingCard from '../../components/MeetingCard.astro';
+import NewsCard from '../../components/NewsCard.astro';
+import { announcementMeeting, publishedNews, type Announcement } from '../../lib/news';
+import { articlePath, dateLabel, path } from '../../lib/paths';
+
+export async function getStaticPaths() {
+  const posts = await publishedNews();
+  return posts.map((entry) => ({
+    params: { id: entry.id },
+    props: {
+      entry,
+      related: entry.data.related
+        .map((id) => posts.find((item) => item.id === id))
+        .filter((item): item is Announcement => Boolean(item) && item?.id !== entry.id),
+    },
+  }));
+}
+
+const { entry, related } = Astro.props;
+const { data } = entry;
+const { Content } = await render(entry);
+const meeting = announcementMeeting(entry);
+const url = encodeURIComponent(new URL(articlePath(entry.id), Astro.site ?? Astro.url).href);
+const subject = encodeURIComponent(data.title);
+---
+<Base title={data.title} description={data.description} image={data.image.path} imageAlt={data.image.alt} type="article">
+  <div class="shell page-space article-page">
+    <a class="text-link" href={path('news/')}>News archive</a>
+    <article>
+      <header class="article-header">
+        <p class="eyebrow">{data.category}{data.sample && ' · Sample announcement'}</p>
+        <h1>{data.title}</h1>
+        {data.published && <time class="muted" datetime={data.published}>{dateLabel(data.published)}</time>}
+        <p class="lead">{data.description}</p>
+      </header>
+      <img class="article-photo" src={path(data.image.path)} alt={data.image.alt} width="887" height="444" decoding="async" />
+      <div class="prose">
+        {data.sample && <p class="sample-notice">Sample announcement for illustration. Check the Monthly Meetings page for confirmed events.</p>}
+        {meeting && <section><h2>Meeting details</h2><MeetingCard meeting={meeting} /></section>}
+        <Content />
+        {data.category === 'Meetings' && <p><a class="text-link" href={path('meetings/')}>Monthly meeting schedule</a></p>}
+        <div class="share" aria-label="Share this article">
+          <strong>Share</strong>
+          <a href={`mailto:?subject=${subject}&body=${url}`}>Email</a>
+          <a href={`https://www.facebook.com/sharer/sharer.php?u=${url}`}>Facebook</a>
+        </div>
+      </div>
+    </article>
+    {related.length > 0 && (
+      <section class="related">
+        <h2>Related articles</h2>
+        <div class="card-grid">{related.map((item) => <NewsCard entry={item} />)}</div>
+      </section>
+    )}
+  </div>
+</Base>

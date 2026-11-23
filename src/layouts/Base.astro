@@ -1,0 +1,78 @@
+---
+import '../styles/global.css';
+import { group } from '../site';
+import { absolute, path } from '../lib/paths';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  imageAlt?: string;
+  type?: 'website' | 'article';
+}
+const { title, description = group.description, image = 'images/desert-sunset.jpg',
+  imageAlt = 'Saguaros and desert mountains at sunset', type = 'website' } = Astro.props;
+const pageTitle = title ? `${title} | ${group.name}` : group.name;
+const site = Astro.site ?? Astro.url;
+const canonical = new URL(Astro.url.pathname, site);
+const links = [
+  { label: 'Home', href: path() },
+  { label: 'About', href: path('about/') },
+  { label: 'Meetings', href: path('meetings/') },
+  { label: 'News', href: path('news/') },
+  { label: 'Contact & Subscribe', href: path('contact/') },
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#f8f4eb" />
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content={group.name} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical.href} />
+    <meta property="og:image" content={absolute(path(image), site)} />
+    <meta property="og:image:alt" content={imageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="canonical" href={canonical.href} />
+    <link rel="icon" href={path('favicon.svg')} type="image/svg+xml" />
+    <title>{pageTitle}</title>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="brand" href={path()}>
+          <img src={path('favicon.svg')} width="40" height="40" alt="" />
+          <span>{group.name}</span>
+        </a>
+        <nav aria-label="Main navigation">
+          {links.map(({ label, href }) => (
+            <a href={href} class:list={[{ 'nav-cta': label === 'Contact & Subscribe' }]}
+              aria-current={Astro.url.pathname === href ? 'page' : undefined}>{label}</a>
+          ))}
+        </nav>
+      </div>
+    </header>
+    <main id="main" tabindex="-1"><slot /></main>
+    <footer class="site-footer">
+      <div class="shell footer-inner">
+        <div>
+          <a class="brand" href={path()}>
+            <img src={path('favicon.svg')} width="40" height="40" alt="" />
+            <span>{group.name}</span>
+          </a>
+          <p>Desert conservation, education, and community.</p>
+        </div>
+        <nav aria-label="Footer navigation">
+          {links.slice(1).map(({ label, href }) => <a href={href}>{label}</a>)}
+          {group.socialLinks.map(({ label, url }) => <a href={url}>{label}</a>)}
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>
