@@ -9,7 +9,7 @@ export const group = {
 // Copy only the public form ID, data-form value, and optional hosted signup URL
 // from the actual MailerLite embed. Never place an API key here.
 export const newsletter = {
-  accountId: '',
-  formCode: '',
-  hostedFormUrl: '',
+  accountId: '2817388',
+  formCode: '4v341N',
+  hostedFormUrl: 'https://preview.mailerlite.io/forms/2817388/204904257796703359/share',
 };

@@ -22,7 +22,7 @@ const links = [
   { label: 'About', href: path('about/') },
   { label: 'Meetings', href: path('meetings/') },
   { label: 'News', href: path('news/') },
-  { label: 'Contact & Subscribe', href: path('contact/') },
+  { label: 'Contact & Sign Up', href: path('contact/') },
 ];
 ---
 <!doctype html>
@@ -54,7 +54,7 @@ const links = [
         </a>
         <nav aria-label="Main navigation">
           {links.map(({ label, href }) => (
-            <a href={href} class:list={[{ 'nav-cta': label === 'Contact & Subscribe' }]}
+            <a href={href} class:list={[{ 'nav-cta': label === 'Contact & Sign Up' }]}
               aria-current={Astro.url.pathname === href ? 'page' : undefined}>{label}</a>
           ))}
         </nav>
