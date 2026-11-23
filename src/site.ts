@@ -1,6 +1,6 @@
-// Replace this provisional group name and add only information approved for publication.
+// Add only information approved for publication.
 export const group = {
-  name: 'Desert Conservation Circle',
+  name: 'Borrego Environmental Committee',
   description: 'A volunteer environmental group for people who care about desert landscapes, wildlife, and the places we share.',
   contactEmail: '',
   socialLinks: [] as { label: string; url: string }[],

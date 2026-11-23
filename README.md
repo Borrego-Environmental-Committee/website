@@ -1,6 +1,6 @@
-# Desert Conservation Circle
+# Borrego Environmental Committee
 
-An Astro website for a volunteer desert environmental group. The displayed name is provisional. The intended GitHub owner is Borrego-Environmental-Committee.
+An Astro website for a volunteer desert environmental group. The site is hosted by the Borrego-Environmental-Committee GitHub account.
 
 ## Run locally
 
