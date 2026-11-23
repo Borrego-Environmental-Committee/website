@@ -8,13 +8,15 @@ interface Props {
   description?: string;
   image?: string;
   imageAlt?: string;
+  canonicalPath?: string;
   type?: 'website' | 'article';
 }
 const { title, description = group.description, image = 'images/desert-sunset.jpg',
-  imageAlt = 'Saguaros and desert mountains at sunset', type = 'website' } = Astro.props;
+  imageAlt = 'Saguaros and desert mountains at sunset', type = 'website',
+  canonicalPath = Astro.url.pathname } = Astro.props;
 const pageTitle = title ? `${title} | ${group.name}` : group.name;
 const site = Astro.site ?? Astro.url;
-const canonical = new URL(Astro.url.pathname, site);
+const canonical = new URL(canonicalPath, site);
 const links = [
   { label: 'Home', href: path() },
   { label: 'About', href: path('about/') },
